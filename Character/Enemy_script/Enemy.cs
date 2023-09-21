@@ -5,6 +5,7 @@ using System;
 using DG.Tweening;
 using UnityEngine.Events;
 using static UnityEngine.EventSystems.EventTrigger;
+
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(EnemyAttributeControl))]
 [RequireComponent(typeof(CharacterController))]
@@ -12,11 +13,10 @@ using static UnityEngine.EventSystems.EventTrigger;
 [RequireComponent(typeof(EnemyOnDamgeHandler))]
 public class Enemy : FSM_System
 {
-
     public Enemy_name enemyname;
     //dragin component
     public Transform blood_pos;
-    [NonSerialized] public GameObject player;
+    [NonSerialized] public Yena player;
     [NonSerialized] public GameObject chamThan;
     [NonSerialized] public Transform StunEffect;
     [NonSerialized] public Animator animator;
@@ -24,9 +24,9 @@ public class Enemy : FSM_System
     [NonSerialized] public CharacterController characterController;
     [NonSerialized] public EnemyAttributeControl attribute;
     [NonSerialized] public EnemyOnDamgeHandler onDamgeHandler;
-    [NonSerialized]public AudioSource audioSource;
+    [NonSerialized] public AudioSource audioSource;
     //gravity
- public float gravity = -9.8f;
+    public float gravity = -9.8f;
     [NonSerialized] public float groundedGravity = -0.5f;
     //m_var
     [NonSerialized] public float distance_to_player;
@@ -54,11 +54,11 @@ public class Enemy : FSM_System
         HandleGravity();
         characterController.Move(moveVector3D);
         //dir to player
-        dirToPlayer = player.transform.position - trans.position;
+        dirToPlayer = player.trans.position - trans.position;
         dirToPlayer.y = 0;
         dirToPlayer.Normalize();
         // update distance to player
-        distance_to_player = Vector3.Distance(player.transform.position, trans.position);
+        distance_to_player = Vector3.Distance(player.trans.position, trans.position);
         // state update is at the end, not at begin
         //
         //
@@ -68,19 +68,19 @@ public class Enemy : FSM_System
     public virtual void InitEnemy()
     {
         this.gameObject.tag = "Enemy";
-        trans = transform;
-        animator = gameObject.GetComponent<Animator>();
-        characterController = gameObject.GetComponent<CharacterController>();
-        attribute = gameObject.GetComponent<EnemyAttributeControl>();
-        onDamgeHandler = gameObject.GetComponent<EnemyOnDamgeHandler>();
-        dataBiding = gameObject.GetComponent<EnemyDataBinding>();
-        audioSource = GetComponent<AudioSource>();
+        trans               = transform;
+        animator            = GetComponent<Animator>();
+        characterController = GetComponent<CharacterController>();
+        attribute           = GetComponent<EnemyAttributeControl>();
+        onDamgeHandler      = GetComponent<EnemyOnDamgeHandler>();
+        dataBiding          = GetComponent<EnemyDataBinding>();
+        audioSource         = GetComponent<AudioSource>();
     }
     public virtual void SetUpEnemy()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Yena>();
         //dir to player
-        dirToPlayer = player.transform.position - trans.position;
+        dirToPlayer = player.trans.position - trans.position;
         dirToPlayer.y = 0;
         dirToPlayer.Normalize();
 
@@ -98,7 +98,7 @@ public class Enemy : FSM_System
     }
     public virtual void OnDeath()
     {
-        if(attribute.bounty==true)
+        if(attribute.bounty)
         {
             var chest = PrefabManager.Instance.CreateProjectile("Chest", this.trans.position, new DamageData(), Target_tag.Player, false, false);
 
@@ -107,8 +107,9 @@ public class Enemy : FSM_System
         DamageData essenvalue = new DamageData();
         essenvalue.HP_Damage = this.attribute.Upgraded_Essen;
         //
-        YangEssen yangEssen =PoolManager.Instance.Spawn("YangEssen").gameObject.GetComponent<YangEssen>();
-        yangEssen.SetUp(this.trans.position, essenvalue, Target_tag.Player, false, false);
+       // YangEssen yangEssen =PoolManager.Instance.Spawn("YangEssen").gameObject.GetComponent<YangEssen>();
+        YangEssen essen = (YangEssen)PrefabManager.Instance.CreateProjectile("YangEssen", trans.position, essenvalue, Target_tag.Player, false, false);
+        //yangEssen.SetUp(this.trans.position, essenvalue, Target_tag.Player, false, false);
         attribute.isAlive = false;
         if (EnemySpawnManager.Instance.enable == true) 
         EnemySpawnManager.Instance.enemyRemain--;

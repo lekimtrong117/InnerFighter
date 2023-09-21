@@ -19,7 +19,7 @@ public class BootLoader : MonoBehaviour
     }
     private void Awake()
     {
-        Application.targetFrameRate = 120;
+        Application.targetFrameRate = 60;
         DontDestroyOnLoad(this.gameObject);
     }
 }

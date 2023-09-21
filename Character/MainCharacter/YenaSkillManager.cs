@@ -7,16 +7,17 @@ public class YenaSkillManager :MonoBehaviour
     public SkillControl currentNormalAttackSkill;
     public SkillControl currentSpellAttackSkill;
     public SkillControl currentDashSkill;
-    public YenaNormalAttackControl yenaNormalAttackControl;
-    public YenaSpellAttackControl yenaSpellAttackControl;
-    public YenaDashControl yenaDashControl;
+
+    public YenaNormalAttackControl  yenaNormalAttackControl;
+    public YenaSpellAttackControl   yenaSpellAttackControl;
+    public YenaDashControl          yenaDashControl;
     // m_var
     private void Awake()
     {
         //initial
         yenaNormalAttackControl = gameObject.GetComponent<YenaNormalAttackControl>();
-        yenaSpellAttackControl=gameObject.GetComponent<YenaSpellAttackControl>();
-        yenaDashControl = gameObject.GetComponent<YenaDashControl>();
+        yenaSpellAttackControl  = gameObject.GetComponent<YenaSpellAttackControl>();
+        yenaDashControl         = gameObject.GetComponent<YenaDashControl>();
         // get normal skill, spell skill. Dash skill
         AddNewSkillForYena(SkillName.IceSword, SkillType.normalAttackSkill);
         AddNewSkillForYena(SkillName.IceHammer, SkillType.spellAttackSkill);

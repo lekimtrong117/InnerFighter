@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 [RequireComponent(typeof(YenaAttributeControl))]
-[RequireComponent (typeof(YenaDataBiding))]
+[RequireComponent(typeof(YenaDataBiding))]
 [RequireComponent(typeof(YenaSkillManager))]
 [RequireComponent(typeof(YenaMoveController))]
 [RequireComponent(typeof(CharacterController))]
@@ -38,6 +38,8 @@ public class Yena : MySingleton<Yena>
     private Enemy[] enemies;
     public Transform leftHand;
     public Transform leftFoot;
+
+
     private void Awake()
     {
         InitYena();
